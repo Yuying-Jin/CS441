@@ -23,3 +23,91 @@ Your task is to write a function that can translate from strings of length 2 to 
 
 For example, calling get_row_col("A3") should return the tuple (2, 0) because A3 corresponds to the row at index 2 and column at index 0in the board.
 '''
+
+def get_row_col(position):
+    position = position.upper()
+    col_mapping = {'A': 0, 'B': 1, 'C': 2}
+    if position[0] in col_mapping:
+        col = col_mapping[position[0]]
+
+    # return the tuple (row, col)
+    return (int(position[1])-1, col)
+
+if __name__ == '__main__':
+    # Initialize board
+    board = [
+        [" ", " ", " "],
+        [" ", " ", " "],
+        [" ", " ", " "],
+    ]
+
+    # Print the board
+    for i in range(3):
+        print(f"{i+1}:  {board[i][0]} | {board[i][1]} | {board[i][2]}")
+        if i < 2:
+            print("   -----------")
+    print("    A   B   C")
+
+
+    for turn_num in range(9):
+        # Initialize player symbol
+        player = "O"
+        # Switch player symbol by turn
+        if turn_num % 2 == 0:
+            player="O"
+        else:
+            player="X"
+
+        while(1):
+            # Get user input 
+            position = input(f"Player {player}: Enter position(ColRow): ")
+
+            # Check user input
+            # Check length of the input
+            if len(position) != 2:
+                print("Invalid input: your input should be a letter(col) followed by an integer(row)\n")
+                continue
+
+            isValid = True
+
+            # Check range of col and row
+            if position[0] >= '1' and position[0] <= '3':
+                print("Invalid input: The first char is col which should be a letter from A to C")
+                isValid = False
+            elif position[0].upper() < 'A' or position[0].upper() > 'C':
+                print("Invalid input: col should be a letter from A to C")
+                isValid = False
+
+            if position[1].upper() >= 'A' and position[1].upper() <= 'C':
+                print("Invalid input: The second char is row which should be an integer from 1 to 3")
+                isValid = False
+            elif position[1] < '1' or position[1] > '3':
+                print("Invalid input: row should be an integer from 1 to 3")
+                isValid = False
+
+            if not isValid:
+                print("\n")
+                continue
+
+            # Get row and col
+            row, col = get_row_col(position)
+
+            # Check if the cell is free
+            if board[row][col] != ' ':
+                print(f"There's an {board[row][col]} in the cell {position} on the board.")
+                continue
+            else:
+                print("\n")
+                break
+
+        # Set row and col
+        board[row][col] = player
+
+        # Print the board
+        for i in range(3):
+            print(f"{i+1}:  {board[i][0]} | {board[i][1]} | {board[i][2]}")
+            if i < 2:
+                print("   -----------")
+        print("    A   B   C")
+        
+
