@@ -8,6 +8,7 @@ In this lab, you will write a function that calculates the cost of a route betwe
 A terrain is generated for you 
 '''
 import numpy as np
+import matplotlib.pyplot as plt
 
 def get_route_cost(route_coordinate, game_map):
     """
@@ -39,6 +40,93 @@ def get_route_cost(route_coordinate, game_map):
     :return: a floating point number representing the cost of the route
     """
     # Build a path from start to end that looks like [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 4)]
+
+    print(route_coordinate)
+    path = []
+    city_start, city_end = route_coordinate
+    city_start_x, city_start_y = city_start
+    city_end_x, city_end_y = city_end
+
+    horizontal_distance = abs(city_start_x - city_end_x)
+    vertical_distance = abs(city_start_y - city_end_y)
+
+    # diagonal
+    # if horizontal_distance == vertical_distance:
+    #   if city_start_x > city_end_x:
+    #     city_start_x -= 1
+    #     if city_start_y > city_end_y:
+    #       city_start_y -= 1
+    #     else:
+    #       city_start_y += 1
+    #   else:
+    #     city_start_x += 1
+ 
+    # if horizontal_distance >  vertical_distance:
+    #   if city_start_x > city_end_x:
+    #     city_start_x -= 1
+    #   else:
+    #     city_start_x += 1
+
+    # if vertical_distance >  horizontal_distance:
+    #   if city_start_y > city_end_y:
+    #     city_start_y -= 1
+    #   else:
+    #       city_start_y += 1
+
+    if horizontal_distance == vertical_distance:
+      while city_start_x != city_start_y:
+        if city_start_x > city_end_x:
+          city_start_x -= 1
+          if city_start_y > city_end_y:
+            city_start_y -= 1
+          else:
+            city_start_y += 1
+        else:
+          city_start_x += 1
+        path.append((city_start_x, city_start_y))
+
+
+    # if horizontal dist is longer
+    if horizontal_distance > vertical_distance:
+      multi = horizontal_distance // vertical_distance # int
+      for m in range(multi):
+        # udpate x
+        if city_start_x > city_end_x:
+          city_start_x -= 1
+        else:
+          city_start_x += 1
+        
+        # update y
+        for i in range(vertical_distance):
+          if city_start_y > city_end_y:
+            city_start_y -= 1
+          else:
+            city_start_y += 1
+          path.append((city_start_x, city_start_y))
+
+    # if vertical dist is longer
+    if horizontal_distance < vertical_distance:
+      multi = vertical_distance // horizontal_distance # int
+      for m in range(multi):
+        # udpate y
+        if city_start_y > city_end_y:
+          city_start_y -= 1
+        else:
+          city_start_y += 1
+        
+        # update x
+        for i in range(horizontal_distance):
+          if city_start_x > city_end_y:
+            city_start_x -= 1
+          else:
+            city_start_x += 1
+          path.append((city_start_x, city_start_y))
+    
+
+    x, y = zip(*path)
+    plt.scatter(x,y)
+    plt.savefig(f"{route_coordinate[0][0]}.jpg")
+
     pass 
     return game_map[tuple(zip(*path))].sum()
 

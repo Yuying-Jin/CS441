@@ -32,7 +32,7 @@ def get_routes(city_names):
     """
     n = len(city_names)
     return [(city_names[i], city_names[j]) for i in range(n-1) for j in range(0, n-i-1) if i!=j]
-
+    # return list(itertools.permutations(city_names, 2))
     pass
 
 
