@@ -3,8 +3,4 @@
 .vscode/
 .idea/
 .DS_Store
-<<<<<<< HEAD
 src/venv
-=======
-src/venv
->>>>>>> 5801687 (git pull upstream main)

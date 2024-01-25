@@ -21,6 +21,7 @@ def get_randomly_spread_cities(size, n_cities):
     return [(random.randrange(size[0]), random.randrange(size[1])) for _ in range(n_cities)]
 
 
+
 def get_routes(cities):
     """
     It takes a list of cities and returns a list of all possible routes between those cities. 
