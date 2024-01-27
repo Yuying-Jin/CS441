@@ -9,6 +9,14 @@ A terrain is generated for you
 '''
 import numpy as np
 import matplotlib.pyplot as plt
+import math
+
+def update_position(start, end):
+  if start > end:
+    start -= 1
+  elif start < end:
+    start += 1
+  return start
 
 def get_route_cost(route_coordinate, game_map):
     """
@@ -43,91 +51,96 @@ def get_route_cost(route_coordinate, game_map):
 
     print(route_coordinate)
     path = []
+    
+    # Get start and end cells
     city_start, city_end = route_coordinate
     city_start_x, city_start_y = city_start
     city_end_x, city_end_y = city_end
 
+    # Append the first cell
+    path.append((city_start_x, city_start_y))
+
+    # Initialize the var is_H_or_V_line as False
+    is_H_or_V_line = False
+
+    # Process the case that path is a horizontal or vertical line first
+    if city_start_x == city_end_x:
+      is_H_or_V_line = True
+      vertical_distance = abs(city_start_y - city_end_y)
+
+      for i in range(vertical_distance):
+        city_start_y = update_position(city_start_y, city_end_y)
+        path.append((city_start_x, city_start_y))
+
+    if city_start_y == city_end_y:
+      is_H_or_V_line = True
+      horizontal_distance = abs(city_start_x - city_end_x)
+
+      for i in range(horizontal_distance):
+        city_start_x = update_position(city_start_x, city_end_x)
+        path.append((city_start_x, city_start_y))
+
+    if is_H_or_V_line:
+      return game_map[tuple(zip(*path))].sum() # Return
+
     horizontal_distance = abs(city_start_x - city_end_x)
     vertical_distance = abs(city_start_y - city_end_y)
 
-    # diagonal
-    # if horizontal_distance == vertical_distance:
-    #   if city_start_x > city_end_x:
-    #     city_start_x -= 1
-    #     if city_start_y > city_end_y:
-    #       city_start_y -= 1
-    #     else:
-    #       city_start_y += 1
-    #   else:
-    #     city_start_x += 1
- 
-    # if horizontal_distance >  vertical_distance:
-    #   if city_start_x > city_end_x:
-    #     city_start_x -= 1
-    #   else:
-    #     city_start_x += 1
-
-    # if vertical_distance >  horizontal_distance:
-    #   if city_start_y > city_end_y:
-    #     city_start_y -= 1
-    #   else:
-    #       city_start_y += 1
-
+    # Process the case that path is a diagonal line (horizontal dist equals to vertial dist)
     if horizontal_distance == vertical_distance:
       while city_start_x != city_start_y:
-        if city_start_x > city_end_x:
-          city_start_x -= 1
-          if city_start_y > city_end_y:
-            city_start_y -= 1
-          else:
-            city_start_y += 1
-        else:
-          city_start_x += 1
+        city_start_x = update_position(city_start_x, city_end_x)
+        city_start_y = update_position(city_start_y, city_end_y)
         path.append((city_start_x, city_start_y))
+      return game_map[tuple(zip(*path))].sum() # Return
 
-
+    # Process other cases
     # if horizontal dist is longer
     if horizontal_distance > vertical_distance:
-      multi = horizontal_distance // vertical_distance # int
-      for m in range(multi):
-        # udpate x
-        if city_start_x > city_end_x:
-          city_start_x -= 1
-        else:
-          city_start_x += 1
-        
-        # update y
-        for i in range(vertical_distance):
-          if city_start_y > city_end_y:
-            city_start_y -= 1
-          else:
-            city_start_y += 1
-          path.append((city_start_x, city_start_y))
+      multi = horizontal_distance / vertical_distance # float
+      # print(f"multi: {multi}")
+
+      for pt in range(horizontal_distance):
+
+        # Update y
+        if math.floor(pt % multi) == 0 and pt != 0:
+          city_start_y = update_position(city_start_y, city_end_y)
+          
+        # Update x
+        city_start_x = update_position(city_start_x, city_end_x)
+        path.append((city_start_x, city_start_y))
 
     # if vertical dist is longer
     if horizontal_distance < vertical_distance:
-      multi = vertical_distance // horizontal_distance # int
-      for m in range(multi):
-        # udpate y
-        if city_start_y > city_end_y:
-          city_start_y -= 1
-        else:
-          city_start_y += 1
+      multi = vertical_distance / horizontal_distance # float
+      # print(f"multi: {multi}")
+
+      for pt in range(vertical_distance):
+
+        # Update x
+        if math.floor(pt % multi) == 0 and pt != 0:
+          city_start_x = update_position(city_start_x, city_end_x)
         
-        # update x
-        for i in range(horizontal_distance):
-          if city_start_x > city_end_y:
-            city_start_x -= 1
-          else:
-            city_start_x += 1
-          path.append((city_start_x, city_start_y))
-    
+        # Update y
+        city_start_y = update_position(city_start_y, city_end_y)
+        path.append((city_start_x, city_start_y))
 
+    # issue: the floor() method of math.floor(pt % multi) leads to miss the last one
+    # if using round(), the path is not smooth enough
+    # Append the last one
+    if path[-1] != (city_end_x, city_end_y):
+      path.append((city_end_x, city_end_y))
+
+    # Visualize and save the path as a scatter diagram and a text file
     x, y = zip(*path)
-    plt.scatter(x,y)
-    plt.savefig(f"{route_coordinate[0][0]}.jpg")
+    plt.scatter(x,y, marker="s")
+    plt.savefig(f"{route_coordinate[0]}-{route_coordinate[1]}.jpg")
+    plt.clf() # clear figure
 
-    pass 
+    with open(f"{route_coordinate[0]}-{route_coordinate[1]}.txt", 'w') as file:
+      for p in path:
+          file.write("%s\n" % str(p))
+
     return game_map[tuple(zip(*path))].sum()
 
 
@@ -153,8 +166,7 @@ def main():
     sys.path.append(str((Path(__file__)/'..'/'..').resolve().absolute()))
     from lab2.cities_n_routes import get_randomly_spread_cities, get_routes
 
-    city_names = ['Morkomasto', 'Morathrad', 'Eregailin', 'Corathrad', 'Eregarta', 
-                  'Numensari', 'Rhunkadi', 'Londathrad', 'Baernlad', 'Forthyr']
+    city_names = ['Morkomasto', 'Morathrad', 'Eregailin', 'Corathrad', 'Eregarta', 'Numensari', 'Rhunkadi', 'Londathrad', 'Baernlad', 'Forthyr']
     map_size = 300, 200
 
     n_cities = len(city_names)
