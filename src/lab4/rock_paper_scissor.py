@@ -7,6 +7,7 @@ sys.path.append(str((Path(__file__) / ".." / "..").resolve().absolute()))
 from lab4.player import Player
 
 
+
 weapons = ["Rock", "Paper", "Scissor"]
 
 def console_weapon_select():
@@ -117,6 +118,7 @@ class Game:
         elif decisionArray[player.action][opponent.action] == 0:
             winner = 0
         self.displayResult(player, opponent, winner)
+
         return winner
 
 
