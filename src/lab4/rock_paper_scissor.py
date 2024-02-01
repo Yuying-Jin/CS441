@@ -1,6 +1,6 @@
 # From https://codereview.stackexchange.com/questions/237601/simple-python-turn-based-battle-game
 import random
-from lab4.player import Player
+from player import Player
 
 
 weapons = ["Rock", "Paper", "Scissor"]
@@ -113,6 +113,7 @@ class Game:
         elif decisionArray[player.action][opponent.action] == 0:
             winner = 0
         self.displayResult(player, opponent, winner)
+
         return winner
 
 

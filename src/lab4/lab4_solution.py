@@ -38,14 +38,53 @@ and 4 points for beating the mimic agent.
 from rock_paper_scissor import Player
 from rock_paper_scissor import run_game
 from rock_paper_scissor import random_weapon_select
+import random
 
 class AiPlayer(Player):
     def __init__(self, name):
         super().__init__(name)
         self.initial_weapon = random_weapon_select()
+        self.guess = -1
+
+    def agent_single(self):
+        return self.opponent_choices[0] % 3 - 2
+
+    def agent_switch(self):
+        return self.opponent_choices[-1] % 3 - 2 
+
+    def agent_mimic(self):
+        return self.my_choices[-1] % 3 - 2 
     
     def weapon_selecting_strategy(self):
-        pass
+        round_num = 4 # monitor the latest $round_num rounds of choices
+
+        # first $round_num rounds, return random weapon
+        if len(self.opponent_choices) < round_num:
+            return random.randint(0, 2) 
+        
+        # already know what agent the opponent is applying
+        if self.guess == 1:
+            return self.agent_switch()
+        if self.guess == 2:
+            return self.agent_mimic()
+        
+        # if oppoent choices are static, guessing opponent is single agent
+        if all(c == self.opponent_choices[0] for c in self.opponent_choices[-round_num:]):
+            self.guess = 0 # guess single agent
+            return self.agent_single()  
+        
+        # if opponent choice is not static and AI guessed oppentent is single agent before, 
+        # opponent is switch agent
+        if not all(c == self.opponent_choices[0] for c in self.opponent_choices[-round_num:]) and self.guess == 0:
+            self.guess = 1 # guess switch agent
+            print("++++++++ guess switch +++++++++")
+            return self.agent_switch()
+        
+        # if opponent choice is dynamic, opponent is mimic agent
+        if not all(c == self.opponent_choices[0] for c in self.opponent_choices[-round_num:]):
+            self.guess = 2 
+            print("++++++++ guess mimic +++++++++")
+            return self.agent_mimic()
 
 
 if __name__ == '__main__':
