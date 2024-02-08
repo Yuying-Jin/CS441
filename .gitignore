@@ -3,4 +3,8 @@
 .vscode/
 .idea/
 .DS_Store
+<<<<<<< HEAD
 src/venv
+=======
+src/venv
+>>>>>>> eeaf445 (finish lab5)
