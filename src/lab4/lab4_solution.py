@@ -56,7 +56,7 @@ class AiPlayer(Player):
         return self.my_choices[-1] % 3 - 2 
     
     def weapon_selecting_strategy(self):
-        round_num = 4 # monitor the latest $round_num rounds of choices
+        round_num = 5 # monitor the latest $round_num rounds of choices
 
         # first $round_num rounds, return random weapon
         if len(self.opponent_choices) < round_num:
