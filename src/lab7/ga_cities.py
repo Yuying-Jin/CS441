@@ -19,7 +19,7 @@ from pathlib import Path
 
 sys.path.append(str((Path(__file__) / ".." / ".." / "..").resolve().absolute()))
 
-from src.lab5.landscape import elevation_to_rgba
+from src.lab5.landscape import elevation_to_rgba, get_elevation
 
 
 def game_fitness(cities, idx, elevation, size):
@@ -30,6 +30,36 @@ def game_fitness(cities, idx, elevation, size):
     2. The cities should have a realistic distribution across the landscape
     3. The cities may also not be on top of mountains or on top of each other
     """
+    cities = solution_to_cities(cities, size)
+
+    for city in cities:
+        x, y = city
+        if elevation[x, y] < 0.1:
+            fitness -= 1
+
+    distances = []
+    for i in range(len(cities)):
+        for j in range(i + 1, len(cities)):
+            x1, y1 = cities[i]
+            x2, y2 = cities[j]
+            distance = np.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+            distances.append(distance)
+    avg_distance = np.mean(distances)
+    min_distance = np.min(distances)
+    if min_distance < 5:
+        fitness -= 1
+    if avg_distance > 15:
+        fitness -= 1
+
+    for i in range(len(cities)):
+        for j in range(i + 1, len(cities)):
+            x1, y1 = cities[i]
+            x2, y2 = cities[j]
+            if abs(x1 - x2) <= 1 and abs(y1 - y2) <= 1:
+                fitness -= 1
+            if elevation[x1, y1] > 0.8 or elevation[x2, y2] > 0.8:
+                fitness -= 1
+
     return fitness
 
 
@@ -115,13 +145,16 @@ if __name__ == "__main__":
     n_cities = 10
     elevation = []
     """ initialize elevation here from your previous code"""
+
+    elevation = get_elevation(size)
+
     # normalize landscape
     elevation = np.array(elevation)
     elevation = (elevation - elevation.min()) / (elevation.max() - elevation.min())
     landscape_pic = elevation_to_rgba(elevation)
 
     # setup fitness function and GA
-    fitness = lambda cities, idx: game_fitness(
+    fitness = lambda ga_instance, cities, idx: game_fitness(
         cities, idx, elevation=elevation, size=size
     )
     fitness_function, ga_instance = setup_GA(fitness, n_cities, size)
@@ -142,4 +175,4 @@ if __name__ == "__main__":
     plt.imshow(landscape_pic, cmap="gist_earth")
     plt.plot(cities_t[:, 1], cities_t[:, 0], "r.")
     plt.show()
-    print(fitness_function(cities, 0))
+    print(fitness_function(ga_instance, cities, 0))
