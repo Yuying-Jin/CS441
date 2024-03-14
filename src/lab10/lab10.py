@@ -35,6 +35,7 @@ sklearn_model.fit(x_train, y_train)
 print("Accuracy of model: {}\n".format(sklearn_model.score(x_test, y_test)))
 
 
+<<<<<<< HEAD
 """ Improve the model by normalizing the input data. """
 scaler = preprocessing.StandardScaler().fit(x_train)
 x_train = scaler.transform(x_train)
@@ -42,4 +43,17 @@ x_test = scaler.transform(x_test)
 
 sklearn_model.fit(x_train, y_train)
 
+=======
+# y = df.HeartDisease.values
+# x = df.drop(["HeartDisease"], axis=1)
+
+# Normalize the input data before creating a test train split (Use the same random state)
+""" Improve the model by normalizing the input data. """
+scaler = preprocessing.StandardScaler().fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+sklearn_model.fit(x_train, y_train)
+
+>>>>>>> b167853 (finish lab10)
 print("Accuracy of improved model: {}\n".format(sklearn_model.score(x_test, y_test)))
