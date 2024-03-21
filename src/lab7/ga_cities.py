@@ -22,7 +22,7 @@ sys.path.append(str((Path(__file__) / ".." / ".." / "..").resolve().absolute()))
 from src.lab5.landscape import elevation_to_rgba, get_elevation
 
 
-def game_fitness(cities, idx, elevation, size):
+def game_fitness(solution, idx, elevation, size):
     fitness = 0.0001  # Do not return a fitness of 0, it will mess up the algorithm.
     """
     Create your fitness function here to fulfill the following criteria:
@@ -175,4 +175,4 @@ if __name__ == "__main__":
     plt.imshow(landscape_pic, cmap="gist_earth")
     plt.plot(cities_t[:, 1], cities_t[:, 0], "r.")
     plt.show()
-    print(fitness_function(ga_instance, cities, 0))
+    print(fitness_function(cities, 0))
