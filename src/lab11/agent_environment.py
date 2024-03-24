@@ -1,4 +1,5 @@
 import sys
+
 import pygame
 import random
 from sprite import Sprite
@@ -50,13 +51,13 @@ def displayCityNames(city_locations, city_names):
 
 class State:
     def __init__(
-        self,
-        current_city,
-        destination_city,
-        travelling,
-        encounter_event,
-        cities,
-        routes,
+            self,
+            current_city,
+            destination_city,
+            travelling,
+            encounter_event,
+            cities,
+            routes,
     ):
         self.current_city = current_city
         self.destination_city = destination_city
@@ -71,7 +72,7 @@ if __name__ == "__main__":
     black = 1, 1, 1
     start_city = 0
     end_city = 9
-    sprite_path = "assets/lego.png"
+    sprite_path = "./assets/lego.png"
     sprite_speed = 1
 
     screen = setup_window(width, height, "Game World Gen Practice")
@@ -99,10 +100,12 @@ if __name__ == "__main__":
 
     player_sprite = Sprite(sprite_path, city_locations[start_city])
 
-    player = PyGameHumanPlayer()
+    # player = PyGameHumanPlayer()
 
     """ Add a line below that will reset the player variable to 
     a new object of PyGameAIPlayer class."""
+
+    player = PyGameAIPlayer()
 
     state = State(
         current_city=start_city,
@@ -152,6 +155,10 @@ if __name__ == "__main__":
         else:
             player_sprite.draw_sprite(screen)
         pygame.display.update()
+
+        # wait 10 ms
+        pygame.time.wait(10)
+
         if state.current_city == end_city:
             print('You have reached the end of the game!')
             break

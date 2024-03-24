@@ -108,6 +108,7 @@ class Combat:
             [True, True, False],  # Arrow
             [False, True, True],  # Fire
         ]
+
         print(
             f"\n{player.name} used {weapons[player.weapon]}, {opponent.name} used {weapons[opponent.weapon]}"
         )

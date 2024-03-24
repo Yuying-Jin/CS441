@@ -54,6 +54,8 @@ def run_pygame_combat(combat_surface, screen, player_sprite):
     """ Add a line below that will reset the player object
     to an instance of the PyGameAICombatPlayer class"""
 
+    player = PyGameAICombatPlayer("Legolas")
+
     opponent = PyGameComputerCombatPlayer("Computer")
     opponent_sprite = Sprite(
         AI_SPRITE_PATH, (player_sprite.sprite_pos[0] - 100, player_sprite.sprite_pos[1])
@@ -61,6 +63,8 @@ def run_pygame_combat(combat_surface, screen, player_sprite):
 
     # Main Game Loop
     while not currentGame.gameOver:
+        pygame.time.wait(50)
+
         draw_combat_on_window(combat_surface, screen, player_sprite, opponent_sprite)
 
         run_turn(currentGame, player, opponent)

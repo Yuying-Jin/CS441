@@ -34,8 +34,11 @@ You get a 0 point for beating the single agent, 1 points for beating the switch 
 and 4 points for beating the mimic agent.
 
 '''
+import sys
+from pathlib import Path
 
-from rock_paper_scissor import Player
+sys.path.append(str((Path(__file__) / "..").resolve().absolute()))
+from player import Player
 from rock_paper_scissor import run_game
 from rock_paper_scissor import random_weapon_select
 import random
