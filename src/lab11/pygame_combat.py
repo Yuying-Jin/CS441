@@ -1,10 +1,10 @@
 import pygame
 from pathlib import Path
 
-from sprite import Sprite
-from turn_combat import CombatPlayer, Combat
-from pygame_ai_player import PyGameAICombatPlayer
-from pygame_human_player import PyGameHumanCombatPlayer
+from src.lab11.sprite import Sprite
+from src.lab11.turn_combat import CombatPlayer, Combat
+from src.lab11.pygame_ai_player import PyGameAICombatPlayer
+from src.lab11.pygame_human_player import PyGameHumanCombatPlayer
 
 AI_SPRITE_PATH = Path("assets/ai.png")
 

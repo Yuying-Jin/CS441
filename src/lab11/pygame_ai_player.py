@@ -1,9 +1,9 @@
 """ Create PyGameAIPlayer class here"""
 import random
 
-from lab4.lab4_solution import AiPlayer
+from src.lab4.lab4_solution import AiPlayer
 
-from lab11.pygame_human_player import PyGameHumanCombatPlayer
+from src.lab11.pygame_human_player import PyGameHumanCombatPlayer
 
 
 class PyGameAIPlayer:
