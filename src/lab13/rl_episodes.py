@@ -15,12 +15,14 @@ this may lead to the agent losing the game.
 import sys
 from pathlib import Path
 
+sys.path.append(str((Path(__file__) / ".." / ".." / "..").resolve().absolute()))
+
 # line taken from turn_combat.py
 sys.path.append(str((Path(__file__) / ".." / "..").resolve().absolute()))
 
-from lab11.pygame_combat import PyGameComputerCombatPlayer
-from lab11.turn_combat import CombatPlayer
-from lab12.episode import run_episode
+from src.lab11.pygame_combat import PyGameComputerCombatPlayer
+from src.lab11.turn_combat import CombatPlayer
+from src.lab12.episode import run_episode
 
 from collections import defaultdict
 import random
@@ -71,11 +73,44 @@ def run_episodes(n_episodes):
         Collect the returns for each state-action pair in a dictionary of dictionaries where the keys are states and
             the values are dictionaries of actions and their returns.
         After all episodes have been run, calculate the average return for each state-action pair.
-        Return the action values as a dictionary of dictionaries where the keys are states and 
+        Return the action values as a dictionary of dictionaries where the keys are states and
             the values are dictionaries of actions and their values.
     '''
 
-    return action_values
+    # Initialize vars to store Sum of returns for each state-action pair
+    # and number of visits for each state-action pair
+    action_values_sum = defaultdict(lambda: defaultdict(float))
+    action_visit_counts = defaultdict(lambda: defaultdict(int))
+
+    # Create player objects
+    player = PyGameRandomCombatPlayer("Player")
+    opponent = PyGameComputerCombatPlayer("Computer")
+
+    # Run all episodes
+    for _ in range(n_episodes):
+        # Get the returns for each state-action pair in each episode
+        history = run_random_episode(player, opponent)
+        history_returns = get_history_returns(history)
+
+        # Update the sum of returns and visit counts for each state-action pair
+        for state, actions_returns in history_returns.items():
+            for action, return_ in actions_returns.items():
+                action_values_sum[state][action] += return_
+                action_visit_counts[state][action] += 1
+
+    # Calculate the average return for each state-action pair
+    action_values_avg = defaultdict(lambda: defaultdict(float))
+
+    for state, action_returns in action_values_sum.items():
+        for action, total_return in action_returns.items():
+            # Get visit count
+            visit_count = action_visit_counts[state][action]
+            # Calculate average return for the pair
+            # If the maximum visit count is zero, divided by 1
+            action_values_avg[state][action] = total_return / max(visit_count, 1)
+
+    # Return action values
+    return action_values_avg
 
 
 def get_optimal_policy(action_values):
@@ -86,6 +121,7 @@ def get_optimal_policy(action_values):
 
 
 def test_policy(policy):
+    print("policy")
     names = ["Legolas", "Saruman"]
     total_reward = 0
     for _ in range(100):
@@ -102,5 +138,6 @@ if __name__ == "__main__":
     action_values = run_episodes(10000)
     print(action_values)
     optimal_policy = get_optimal_policy(action_values)
+    print("optimal_policy")
     print(optimal_policy)
     print(test_policy(optimal_policy))
