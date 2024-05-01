@@ -6,7 +6,7 @@ from src.lab11.turn_combat import CombatPlayer, Combat
 from src.lab11.pygame_ai_player import PyGameAICombatPlayer
 from src.lab11.pygame_human_player import PyGameHumanCombatPlayer
 
-AI_SPRITE_PATH = Path("../../assets/ai.png")
+AI_SPRITE_PATH = Path("../assets/ai.png")
 
 pygame.font.init()
 game_font = pygame.font.SysFont("Comic Sans MS", 15)

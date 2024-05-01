@@ -2,7 +2,7 @@
 Lab 7: Realistic Cities 
 
 In this lab you will try to generate realistic cities using a genetic algorithm.
-Your cities should not be under water, and should have a realistic distribution across the landscape.
+Your cities should not be underwater, and should have a realistic distribution across the landscape.
 Your cities may also not be on top of mountains or on top of each other.
 Create the fitness function for your genetic algorithm, so that it fulfills these criterion
 and then use it to generate a population of cities.
@@ -19,7 +19,7 @@ from pathlib import Path
 
 sys.path.append(str((Path(__file__) / ".." / ".." / "..").resolve().absolute()))
 
-from src.lab5.landscape import elevation_to_rgba, get_elevation
+from src.lab5.landscape import elevation_to_rgba,  get_elevation
 
 
 def game_fitness(solution, idx, elevation, size):
@@ -30,12 +30,19 @@ def game_fitness(solution, idx, elevation, size):
     2. The cities should have a realistic distribution across the landscape
     3. The cities may also not be on top of mountains or on top of each other
     """
-    cities = solution_to_cities(cities, size)
+    cities = solution_to_cities(solution, size)
+
+    x_safe_boundary, y_safe_boundary = size[0] // 10, size[1]//10
 
     for city in cities:
         x, y = city
         if elevation[x, y] < 0.1:
             fitness -= 1
+
+        if abs(x - size[0]) < x_safe_boundary or x < x_safe_boundary:
+            fitness -= 1
+        if abs(y - size[1]) < y_safe_boundary or y < y_safe_boundary:
+            fitness -= -1
 
     distances = []
     for i in range(len(cities)):
@@ -175,4 +182,4 @@ if __name__ == "__main__":
     plt.imshow(landscape_pic, cmap="gist_earth")
     plt.plot(cities_t[:, 1], cities_t[:, 0], "r.")
     plt.show()
-    print(fitness_function(cities, 0))
+    print(fitness_function(fitness, cities, 0))

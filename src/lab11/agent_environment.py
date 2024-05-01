@@ -70,7 +70,7 @@ if __name__ == "__main__":
     black = 1, 1, 1
     start_city = 0
     end_city = 9
-    sprite_path = "./assets/lego.png"
+    sprite_path = "../../assets/lego.png"
     sprite_speed = 1
 
     screen = setup_window(width, height, "Game World Gen Practice")
@@ -92,7 +92,6 @@ if __name__ == "__main__":
 
     city_locations = get_randomly_spread_cities(size, len(city_names))
     routes = get_routes(city_locations)
-
     random.shuffle(routes)
     routes = routes[:10]
 
